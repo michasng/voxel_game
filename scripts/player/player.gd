@@ -7,6 +7,9 @@ const JUMP_VELOCITY = 4.5
 
 const MOUSE_SENSITIVITY = 0.003
 
+@export var world: World
+var chunk_coords: Vector3i
+
 var gravity = ProjectSettings.get_setting("physics/3d/default_gravity")
 
 @onready
@@ -14,6 +17,7 @@ var camera: Camera3D = $Camera3D
 
 func _ready():
 	Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
+	chunk_coords = world.world_to_chunk(position)
 
 
 func _physics_process(delta: float):
@@ -32,6 +36,10 @@ func _physics_process(delta: float):
 		velocity.z = move_toward(velocity.z, 0, SPEED)
 
 	move_and_slide()
+	var new_chunk_coords = world.world_to_chunk(position)
+	if new_chunk_coords != chunk_coords:
+		chunk_coords = new_chunk_coords
+		world.chunk_loading(chunk_coords)
 
 
 func _input(event: InputEvent):
