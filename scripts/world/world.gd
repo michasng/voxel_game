@@ -1,21 +1,24 @@
-extends GridMap
+extends Node
 class_name World
 
-@export var world_generator: WorldGenerator
+@onready var grid_map: GridMap = $GridMap
+@onready var world_generator: WorldGenerator = $WorldGenerator
 
+@export var chunk_loader: Node3D
+var chunk_loader_chunk_coords: Vector3i
 
 var chunk_size: int:
 	get:
-		return cell_octant_size
+		return grid_map.cell_octant_size
 
 var loaded_chunks: Array[Vector3i] = []
 
 
-func _ready():
-	for x in range(-1, 2):
-		for y in range(-1, 2):
-			for z in range(-1, 2):
-				_load_chunk(Vector3i(x, y, z))
+func _process(_delta: float) -> void:
+	var new_chunk_coords = world_to_chunk(chunk_loader.position)
+	if new_chunk_coords != chunk_loader_chunk_coords:
+		chunk_loader_chunk_coords = new_chunk_coords
+		chunk_loading(chunk_loader_chunk_coords)
 
 
 func chunk_loading(center_chunk_coords: Vector3i, load_distance: int = 2) -> void:
@@ -49,7 +52,7 @@ func _clear_chunk(chunk_coords: Vector3i) -> void:
 			for z in range(chunk_size):
 				var in_chunk_coords = Vector3i(x, y, z)
 				var world_coords = chunk_coords * chunk_size + in_chunk_coords
-				set_cell_item(world_coords, GridMap.INVALID_CELL_ITEM)
+				grid_map.set_cell_item(world_coords, GridMap.INVALID_CELL_ITEM)
 
 
 func _generate_chunk(chunk_coords: Vector3i) -> void:
@@ -60,7 +63,7 @@ func _generate_chunk(chunk_coords: Vector3i) -> void:
 				var world_coords = chunk_coords * chunk_size + in_chunk_coords
 				var block = world_generator.get_block(world_coords)
 				if block != GridMap.INVALID_CELL_ITEM:
-					set_cell_item(world_coords, block)
+					grid_map.set_cell_item(world_coords, block)
 
 
 func world_to_chunk(world_coords: Vector3) -> Vector3i:

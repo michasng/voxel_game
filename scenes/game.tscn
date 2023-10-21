@@ -1,9 +1,7 @@
-[gd_scene load_steps=9 format=3 uid="uid://bq6lyw2gc8q3k"]
+[gd_scene load_steps=6 format=3 uid="uid://bq6lyw2gc8q3k"]
 
 [ext_resource type="PackedScene" uid="uid://diwbgqyrl5pbd" path="res://scenes/Player.tscn" id="1_6bydf"]
-[ext_resource type="MeshLibrary" uid="uid://0xox537i0dwv" path="res://scenes/mesh_library.tres" id="2_rmoms"]
-[ext_resource type="Script" path="res://scripts/world/world.gd" id="3_uas0a"]
-[ext_resource type="Script" path="res://test/unit/world/world_generator.gd" id="4_uql2y"]
+[ext_resource type="PackedScene" uid="uid://b2ekchm1h8fic" path="res://scenes/World.tscn" id="2_eppjx"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_x2qsf"]
 sky_top_color = Color(0.121792, 0.308725, 0.602814, 1)
@@ -20,8 +18,6 @@ sky = SubResource("Sky_1iion")
 tonemap_mode = 2
 glow_enabled = true
 
-[sub_resource type="FastNoiseLite" id="FastNoiseLite_8hxq3"]
-
 [node name="Game" type="Node3D"]
 
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
@@ -31,17 +27,7 @@ shadow_enabled = true
 [node name="WorldEnvironment" type="WorldEnvironment" parent="."]
 environment = SubResource("Environment_kf56q")
 
-[node name="Player" parent="." node_paths=PackedStringArray("world") instance=ExtResource("1_6bydf")]
-world = NodePath("../GridMap")
+[node name="Player" parent="." instance=ExtResource("1_6bydf")]
 
-[node name="GridMap" type="GridMap" parent="." node_paths=PackedStringArray("world_generator")]
-mesh_library = ExtResource("2_rmoms")
-cell_size = Vector3(1, 1, 1)
-script = ExtResource("3_uas0a")
-world_generator = NodePath("../WorldGenerator")
-metadata/_editor_floor_ = Vector3(0, 0, 0)
-
-[node name="WorldGenerator" type="Node" parent="."]
-script = ExtResource("4_uql2y")
-height_noise = SubResource("FastNoiseLite_8hxq3")
-height_amplitude = 10
+[node name="World" parent="." node_paths=PackedStringArray("chunk_loader") instance=ExtResource("2_eppjx")]
+chunk_loader = NodePath("../Player")

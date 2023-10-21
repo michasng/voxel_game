@@ -1,0 +1,19 @@
+[gd_scene load_steps=5 format=3 uid="uid://b2ekchm1h8fic"]
+
+[ext_resource type="Script" path="res://scripts/world/world.gd" id="1_nv1ex"]
+[ext_resource type="Script" path="res://test/unit/world/world_generator.gd" id="2_rlrbt"]
+[ext_resource type="MeshLibrary" uid="uid://0xox537i0dwv" path="res://scenes/mesh_library.tres" id="2_t6ofn"]
+
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_hvku6"]
+
+[node name="World" type="Node3D"]
+script = ExtResource("1_nv1ex")
+
+[node name="GridMap" type="GridMap" parent="."]
+mesh_library = ExtResource("2_t6ofn")
+cell_size = Vector3(1, 1, 1)
+
+[node name="WorldGenerator" type="Node" parent="."]
+script = ExtResource("2_rlrbt")
+height_noise = SubResource("FastNoiseLite_hvku6")
+height_amplitude = 10
