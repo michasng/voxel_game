@@ -29,5 +29,5 @@ environment = SubResource("Environment_kf56q")
 
 [node name="Player" parent="." instance=ExtResource("1_6bydf")]
 
-[node name="World" parent="." node_paths=PackedStringArray("chunk_loader") instance=ExtResource("2_eppjx")]
-chunk_loader = NodePath("../Player")
+[node name="World" parent="." node_paths=PackedStringArray("center_node") instance=ExtResource("2_eppjx")]
+center_node = NodePath("../Player")

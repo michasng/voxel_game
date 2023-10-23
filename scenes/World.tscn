@@ -1,8 +1,10 @@
-[gd_scene load_steps=5 format=3 uid="uid://b2ekchm1h8fic"]
+[gd_scene load_steps=7 format=3 uid="uid://b2ekchm1h8fic"]
 
 [ext_resource type="Script" path="res://scripts/world/world.gd" id="1_nv1ex"]
-[ext_resource type="Script" path="res://test/unit/world/world_generator.gd" id="2_rlrbt"]
 [ext_resource type="MeshLibrary" uid="uid://0xox537i0dwv" path="res://scenes/mesh_library.tres" id="2_t6ofn"]
+[ext_resource type="Script" path="res://scripts/world/world_generator.gd" id="3_uvsht"]
+[ext_resource type="Script" path="res://scripts/world/chunk_loader.gd" id="4_jaee3"]
+[ext_resource type="Script" path="res://scripts/world/chunk_renderer.gd" id="5_yk8lo"]
 
 [sub_resource type="FastNoiseLite" id="FastNoiseLite_hvku6"]
 
@@ -14,6 +16,15 @@ mesh_library = ExtResource("2_t6ofn")
 cell_size = Vector3(1, 1, 1)
 
 [node name="WorldGenerator" type="Node" parent="."]
-script = ExtResource("2_rlrbt")
+script = ExtResource("3_uvsht")
 height_noise = SubResource("FastNoiseLite_hvku6")
 height_amplitude = 10
+
+[node name="ChunkLoader" type="Node" parent="." node_paths=PackedStringArray("world_generator")]
+script = ExtResource("4_jaee3")
+world_generator = NodePath("../WorldGenerator")
+
+[node name="ChunkRenderer" type="Node" parent="." node_paths=PackedStringArray("grid_map", "chunk_loader")]
+script = ExtResource("5_yk8lo")
+grid_map = NodePath("../GridMap")
+chunk_loader = NodePath("../ChunkLoader")
